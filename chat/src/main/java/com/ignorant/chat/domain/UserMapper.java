@@ -6,11 +6,11 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 
 public interface UserMapper {
-	@Select("SELECT * FROM users WHERE id = #{id}")
+	@Select("SELECT * FROM user WHERE name = #{name}")
 	@Results({ @Result(property = "name", column = "name"), @Result(property = "password", column = "password"),
 			@Result(property = "salt", column = "salt"), @Result(property = "state", column = "state") })
-	UserEntity getOne(Long id);
+	UserEntity getOne(String name);
 
-	@Insert("INSERT INTO users(name, passWord, salt, state) VALUES(#{name}, #{passWord}, #{salt},#{state})")
+	@Insert("INSERT INTO user(name, password, salt, state) VALUES(#{name}, #{password}, #{salt},#{state})")
 	void insert(UserEntity user);
 }

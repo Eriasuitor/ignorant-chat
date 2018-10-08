@@ -17,4 +17,9 @@ public class UserTest {
 	public void insert() {
 		userMapper.insert(new UserEntity("lory.y.jiang", "lj60", "salt_default", new Byte("1")));
 	}
+	
+	@Test
+	public void selectOne() {
+		userMapper.getOne("lory.y.jiang");
+	}
 }

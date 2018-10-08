@@ -8,7 +8,7 @@ public class UserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String name;
-	private String passWord;
+	private String password;
 	private String salt;
 	private byte state;
 	private List<RoleEntity> roleList;
@@ -17,10 +17,10 @@ public class UserEntity implements Serializable {
 		super();
 	}
 
-	public UserEntity(String name, String passWord, String salt, byte state) {
+	public UserEntity(String name, String password, String salt, byte state) {
 		super();
 		this.name = name;
-		this.passWord = passWord;
+		this.password = password;
 		this.salt = salt;
 		this.state = state;
 	}
@@ -41,12 +41,12 @@ public class UserEntity implements Serializable {
 		this.name = name;
 	}
 
-	public String getPassWord() {
-		return passWord;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setPasswWrd(String passWord) {
-		this.passWord = passWord;
+	public void setPasswWrd(String password) {
+		this.password = password;
 	}
 
 	public String getSalt() {
@@ -77,4 +77,7 @@ public class UserEntity implements Serializable {
 		return serialVersionUID;
 	}
 
+	public String getCredentialsSalt() {
+		return this.name + this.salt;
+	}
 }
