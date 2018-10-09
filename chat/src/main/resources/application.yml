@@ -6,6 +6,14 @@ spring:
       driver-class-name: com.mysql.jdbc.Driver
    application:
       name: spring-cloud-eureka
+   redis:
+      host: localhost
+      port: 6379
+      password: test
+
+logging:
+   path: ./logs
+   level:
       
 mybatis:
    type-aliases-package: com.neo.entity
