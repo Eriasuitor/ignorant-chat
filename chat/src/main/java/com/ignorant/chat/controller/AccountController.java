@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,19 +17,25 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ignorant.chat.entity.GeneralResponse;
-import com.ignorant.chat.netty.ChannelManager;
+import com.ignorant.mapper.AccountMapper;
+
+import tk.mybatis.spring.annotation.MapperScan;
 
 @RestController
+@MapperScan("com.ignorant.chat.mapper")
 public class AccountController {
 
 //	private Logger logger = LoggerFactory.getLogger(getClass());
+	@Autowired
+	private AccountMapper am;
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public Map<String, Object> index(String username, String password) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("msg", "兹此证明，你已登录 " + ChannelManager.channelGroup.size());
+		result.put("msg", "兹此证明，你已登录 ");
+		result.put("info", am.queryAccount("Lory.Y.Jiang"));
 		return result;
 	}
 //

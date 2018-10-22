@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ignorant.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.ignorant.pojo.User" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="userId" property="userId" jdbcType="VARCHAR" />
+    <result column="nickName" property="nickName" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="CHAR" />
+    <result column="age" property="age" jdbcType="TINYINT" />
+    <result column="avatar" property="avatar" jdbcType="VARCHAR" />
+    <result column="avatar_small" property="avatar_small" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="createDate" property="createDate" jdbcType="DATE" />
+    <result column="lastEditData" property="lastEditData" jdbcType="DATE" />
+    <result column="createUser" property="createUser" jdbcType="VARCHAR" />
+    <result column="lastEditUser" property="lastEditUser" jdbcType="VARCHAR" />
+  </resultMap>
+</mapper>

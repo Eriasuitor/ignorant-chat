@@ -4,3 +4,19 @@ security:
          client-id: igno-chat
          client-secret: xxxx-xxxx
          authorized-grant-types: auto_generate
+         
+mybatis:
+   type-aliases-package: com.ignorant.pojo
+   mapper-locations: classpath*:mapper/*.xml
+
+mapper:
+   mappers: com.ignorant.utils.MyMapper
+   not-empty: false
+   identity: MYSQL
+
+spring:
+   datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/ic?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+      username: root
+      password: 
