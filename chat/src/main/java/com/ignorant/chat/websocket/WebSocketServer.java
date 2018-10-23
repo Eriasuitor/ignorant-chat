@@ -15,9 +15,12 @@ import javax.websocket.server.ServerEndpoint;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.stereotype.Component;
+
+import com.ignorant.chat.Service.UserInfoService;
 
 @ServerEndpoint("/websocket/{sid}")
 @Component
@@ -41,7 +44,9 @@ public class WebSocketServer {
 	@OnOpen
 	public void onOpen(Session session, @PathParam("sid") String sid) {
 		this.session = session;
-
+		System.out.println(101010);
+		System.out.println();
+		System.out.println(2222);
         System.out.println(ReflectionToStringBuilder.reflectionToString(session.getUserProperties().values()));
 		System.out.println(1);
 //		webSocketSet.add(this); // 加入set中
