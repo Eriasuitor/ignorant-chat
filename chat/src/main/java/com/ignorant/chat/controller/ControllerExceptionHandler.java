@@ -2,7 +2,7 @@ package com.ignorant.chat.controller;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
-@ControllerAdvice
+//@ControllerAdvice
 public class ControllerExceptionHandler {
 	
 }

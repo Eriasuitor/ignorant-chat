@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ignorant.mapper.UserFriendMapper" >
+  <resultMap id="BaseResultMap" type="com.ignorant.pojo.UserFriend" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="userId" property="userId" jdbcType="VARCHAR" />
+    <result column="friendId" property="friendId" jdbcType="VARCHAR" />
+    <result column="createDate" property="createDate" jdbcType="DATE" />
+    <result column="lastEditData" property="lastEditData" jdbcType="DATE" />
+    <result column="createUser" property="createUser" jdbcType="VARCHAR" />
+    <result column="lastEditUser" property="lastEditUser" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="isFriend" parameterType="String" resultType="boolean">
+	SELECT
+		EXISTS(
+			SELECT
+				1
+			FROM
+				`user_friend`
+			WHERE
+				userId = #{userId}
+				AND friendId = #{friendId} LIMIT 1
+		)
+  </select>
+  <insert id="addFriend" parameterType="String">
+	INSERT
+		INTO
+			user_friend(
+				userId,
+				friendId,
+				createDate,
+				lastEditData,
+				createUser,
+				lastEditUser
+			)
+		VALUES(
+			#{userId},
+			#{friendId},
+			NOW(),
+			NOW(),
+			#{userId},
+			#{userId}
+		);
+  </insert>
+</mapper>

@@ -2,15 +2,21 @@ package com.ignorant.chat.entity;
 
 import java.util.Date;
 
+import com.ignorant.chat.Service.UserService;
 import com.ignorant.chat.enums.UserStatus;
 
-public class StatusChange {
+public class StatusChange implements SocketContent {
 	private String from;
 	private UserStatus status;
 	private Date date;
 
 	public StatusChange() {
 		super();
+	}
+
+	public void start() {
+		UserService userService = new UserService();
+		userService.changeStatus(this);
 	}
 
 	public String getFrom() {

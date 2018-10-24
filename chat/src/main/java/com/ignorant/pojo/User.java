@@ -19,6 +19,12 @@ public class User {
 
     private String city;
 
+    private String type;
+
+    private String status;
+
+    private String signature;
+
     private Date createDate;
 
     private Date lastEditData;
@@ -123,6 +129,48 @@ public class User {
      */
     public void setCity(String city) {
         this.city = city;
+    }
+
+    /**
+     * @return type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @param type
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
+     * @return status
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status
+     */
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    /**
+     * @return signature
+     */
+    public String getSignature() {
+        return signature;
+    }
+
+    /**
+     * @param signature
+     */
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 
     /**

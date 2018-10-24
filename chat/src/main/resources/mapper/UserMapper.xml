@@ -17,4 +17,68 @@
     <result column="createUser" property="createUser" jdbcType="VARCHAR" />
     <result column="lastEditUser" property="lastEditUser" jdbcType="VARCHAR" />
   </resultMap>
+  
+  <select id="getFriendList" parameterType="String" resultType="java.util.List">
+	 SELECT
+		userId,
+		nickName,
+		gender,
+		age,
+		avatar,
+		avatar_small,
+		city,
+		`type`,
+		status,
+		signature
+	FROM
+		`user`
+	WHERE
+	userId IN(
+		SELECT
+			friendId
+		FROM
+			user_friend
+		WHERE
+			userId = #{userId}
+	);
+  </select>
+  <select id="getUserInfo" parameterType="String" resultMap="BaseResultMap">
+	SELECT
+		userId,
+		nickName,
+		gender,
+		age,
+		avatar,
+		avatar_small,
+		city,
+		`type`,
+		status,
+		signature,
+		createDate,
+		lastEditData,
+		createUser,
+		lastEditUser
+	FROM
+		`user`
+	WHERE
+		userId = #{userId}
+  </select>
+  <select id="queryUserListByUserId" parameterType="String" resultType="java.util.List">
+	SELECT
+		userId,
+		nickName,
+		gender,
+		age,
+		avatar,
+		avatar_small,
+		city,
+		`type`,
+		status,
+		signature
+	FROM
+		`user`
+	WHERE
+		userId LIKE CONCAT(#{userIdPrefix},'%') 
+  </select>
+  
 </mapper>
