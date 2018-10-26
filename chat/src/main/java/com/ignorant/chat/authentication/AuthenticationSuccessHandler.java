@@ -41,6 +41,7 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.println(1111);
 		String header = request.getHeader("Authorization");
 
 		if (header == null || !header.startsWith("Basic ")) {
@@ -78,7 +79,7 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
 		OAuth2Request oAuth2Request = tokenRequest.createOAuth2Request(clientDetails);
 		OAuth2Authentication oAuth2Authentication = new OAuth2Authentication(oAuth2Request, authentication);
 		OAuth2AccessToken auth2AccessToken = authorizationServerTokenServices.createAccessToken(oAuth2Authentication);
-
+		response.addHeader("Access-Control-Allow-Origin", "*");
 		response.setContentType("application/json;charset=UTF-8");
 		response.getWriter().write(objectMapper.writeValueAsString(auth2AccessToken));
 	}

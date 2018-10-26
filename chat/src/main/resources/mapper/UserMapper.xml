@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ignorant.mapper.UserMapper" >
+<mapper namespace="com.ignorant.chat.mapper.UserMapper" >
   <resultMap id="BaseResultMap" type="com.ignorant.pojo.User" >
     <!--
       WARNING - @mbg.generated
@@ -12,15 +12,18 @@
     <result column="avatar" property="avatar" jdbcType="VARCHAR" />
     <result column="avatar_small" property="avatar_small" jdbcType="VARCHAR" />
     <result column="city" property="city" jdbcType="VARCHAR" />
-    <result column="createDate" property="createDate" jdbcType="DATE" />
-    <result column="lastEditData" property="lastEditData" jdbcType="DATE" />
+    <result column="type" property="type" jdbcType="CHAR" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="signature" property="signature" jdbcType="VARCHAR" />
+    <result column="createDate" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="lastEditData" property="lastEditData" jdbcType="TIMESTAMP" />
     <result column="createUser" property="createUser" jdbcType="VARCHAR" />
     <result column="lastEditUser" property="lastEditUser" jdbcType="VARCHAR" />
   </resultMap>
   
-  <select id="getFriendList" parameterType="String" resultType="java.util.List">
+  <select id="getFriendList" parameterType="String" resultType="java.util.List" resultMap="BaseResultMap">
 	 SELECT
-		userId,
+		userId,                  
 		nickName,
 		gender,
 		age,
@@ -63,7 +66,7 @@
 	WHERE
 		userId = #{userId}
   </select>
-  <select id="queryUserListByUserId" parameterType="String" resultType="java.util.List">
+  <select id="queryUserListByUserId" parameterType="String" resultType="java.util.List" resultMap="BaseResultMap">
 	SELECT
 		userId,
 		nickName,
@@ -78,7 +81,36 @@
 	FROM
 		`user`
 	WHERE
-		userId LIKE CONCAT(#{userIdPrefix},'%') 
+		userId LIKE CONCAT(#{userIdPrefix},'%') LIMIT 20;
   </select>
-  
+  <update id="changeSignature">
+	UPDATE
+		`user`
+	SET
+		signature = #{signature},
+		lastEditData = #{date},
+		lastEditUser = #{userId}
+	WHERE
+		userId = #{userId};
+  </update>
+  <update id="changeStatus">
+	UPDATE
+		`user`
+	SET
+		status = #{status},
+		lastEditData = #{date},
+		lastEditUser = #{userId}
+	WHERE
+		userId = #{userId};
+  </update>
+  <update id="changeAvatar">
+	UPDATE
+		`user`
+	SET
+		avatar = #{avatar},
+		lastEditData = #{date},
+		lastEditUser = #{userId}
+	WHERE
+		userId = #{userId};
+  </update>
 </mapper>

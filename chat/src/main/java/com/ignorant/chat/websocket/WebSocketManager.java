@@ -38,6 +38,7 @@ public class WebSocketManager {
 		CharSequence charSequence = new SafeString(JsonUtils.objectToJson(socketData));
 		try {
 			webSocketSession.sendMessage(new TextMessage(charSequence));
+			logger.info(String.format("send message [%s] to user %s", charSequence, userId));
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 			return false;

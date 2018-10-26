@@ -1,4 +1,4 @@
-package com.ignorant.mapper;
+package com.ignorant.chat.mapper;
 
 import com.ignorant.pojo.UserFriend;
 import com.ignorant.utils.MyMapper;

@@ -2,27 +2,51 @@ package com.ignorant.chat.entity;
 
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.ignorant.chat.Service.UserService;
+import com.ignorant.chat.enums.MsgType;
+import com.ignorant.chat.utils.JsonUtils;
 
-enum MsgType {
-	IMG, TEXT, FILE, MP3, MP4
-}
+@Component
+@Scope("prototype")
+public class Msg extends AbstracScocketContent {
 
-public class Msg implements SocketContent {
+	@Autowired
+	private UserService userService;
+	
 	private String from;
 	private String to;
 	private MsgType type;
 	private String content;
-	private int msgId;
+	private Long msgId;
 	private Date date;
 
 	public Msg() {
 		super();
 	}
+	
+	public Msg(String from, String to, MsgType type, String content, Long msgId, Date date) {
+		super();
+		this.from = from;
+		this.to = to;
+		this.type = type;
+		this.content = content;
+		this.msgId = msgId;
+		this.date = date;
+	}
 
-	public void start() {
-		UserService userService = new UserService();
+	public void start(String content) {
+		Msg msg = JsonUtils.jsonToPojo(content, getClass());
+		setFrom(getUserId());
+		setTo(msg.getTo());
+		setType(msg.getType());
+		setContent(msg.getContent());
+		setDate(new Date());
 		userService.sendMsg(this);
+		System.out.println(5);
 	}
 
 	public String getFrom() {
@@ -57,11 +81,11 @@ public class Msg implements SocketContent {
 		this.content = content;
 	}
 
-	public int getMsgId() {
+	public Long getMsgId() {
 		return msgId;
 	}
 
-	public void setMsgId(int msgId) {
+	public void setMsgId(Long msgId) {
 		this.msgId = msgId;
 	}
 

@@ -1,7 +1,6 @@
 package com.ignorant.chat.controller;
 
 import java.awt.geom.NoninvertibleTransformException;
-import java.io.IOException;
 import java.io.NotActiveException;
 import java.util.HashMap;
 import java.util.List;
@@ -14,25 +13,29 @@ import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.tomakehurst.wiremock.http.HttpResponder;
 import com.ignorant.chat.Service.UserInfoService;
 import com.ignorant.chat.Service.UserService;
 import com.ignorant.chat.entity.GeneralResponse;
-import com.ignorant.mapper.AccountMapper;
+import com.ignorant.chat.entity.Msg;
+import com.ignorant.chat.mapper.AccountMapper;
 import com.ignorant.pojo.User;
 
 import tk.mybatis.spring.annotation.MapperScan;
 
 @RestController
 @MapperScan("com.ignorant.chat.mapper")
+@CrossOrigin
 public class AccountController {
 
 //	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -83,7 +86,8 @@ public class AccountController {
 	}
 
 	@PostMapping("/user/friend")
-	public Map<String, Object> addFriend(Authentication user, String friendId, HttpServletResponse response) {
+	public Map<String, Object> addFriend(Authentication user, @RequestBody String friendId,
+			HttpServletResponse response) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result.put("data", userService.addFriend(user.getName(), friendId));
@@ -103,9 +107,14 @@ public class AccountController {
 		}
 		return result;
 	}
-	
+
 	@GetMapping("/user")
-	public List<User> queryUser(Authentication user, String q) {
+	public List<User> queryUser(Authentication user, @RequestParam String q) {
 		return userService.queryUserListByUserId(q);
+	}
+
+	@GetMapping("/user/friend/message")
+	public List<Msg> queryMessage(Authentication user, String friendId, Long anchor) {
+		return userService.queryMsg(user.getName(), friendId, anchor);
 	}
 }

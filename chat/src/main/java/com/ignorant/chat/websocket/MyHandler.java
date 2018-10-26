@@ -2,6 +2,7 @@ package com.ignorant.chat.websocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
@@ -11,6 +12,9 @@ public class MyHandler implements WebSocketHandler {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
+	@Autowired
+	private WebSocketService webSocketService;
+
 	public void afterConnectionEstablished(WebSocketSession webSocketSession) throws Exception {
 		logger.info(String.format("%s has connected with ip: %s", webSocketSession.getPrincipal().getName(),
 				webSocketSession.getRemoteAddress()) + WebSocketManager.getUserAmountOfOnline());
@@ -19,12 +23,10 @@ public class MyHandler implements WebSocketHandler {
 
 	public void handleMessage(WebSocketSession webSocketSession, WebSocketMessage<?> webSocketMessage)
 			throws Exception {
-		try {
-			logger.info(String.format("data received user: %s, message: %s", webSocketSession.getPrincipal().getName(),
-					webSocketMessage.getPayload()));
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
+		logger.info(String.format("data received user: %s, message: %s", webSocketSession.getPrincipal().getName(),
+				webSocketMessage.getPayload()));
+		webSocketService.operate(webSocketSession.getPrincipal().getName(), webSocketMessage.getPayload());
+
 	}
 
 	public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus arg1) throws Exception {

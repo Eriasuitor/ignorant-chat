@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ignorant.mapper.MsgFlagMapper" >
+<mapper namespace="com.ignorant.caht.mapper.MsgFlagMapper" >
   <resultMap id="BaseResultMap" type="com.ignorant.pojo.MsgFlag" >
     <!--
       WARNING - @mbg.generated
@@ -13,4 +13,39 @@
     <result column="createUser" property="createUser" jdbcType="VARCHAR" />
     <result column="lastEditUser" property="lastEditUser" jdbcType="VARCHAR" />
   </resultMap>
+  
+  <select id="queryMsgFlag" parameterType="String" resultMap="BaseResultMap">
+	SELECT
+		userId,
+		peak,
+		`current`,
+		createDate,
+		lastEditData,
+		createUser,
+		lastEditUser
+	FROM
+		msg_flag;
+	WHERE
+	userId = #{userId}
+  </select>
+  <update id="updatePeak">
+	UPDATE
+		msg_flag
+	SET
+		peak = #{peak},
+		createUser = #{userId},
+		lastEditUser = NOW('
+	WHERE
+		userId = #{userId};
+  </update>
+  <update id="updateCurrent">
+	UPDATE
+		msg_flag
+	SET
+		`current` = #{current},
+		createUser = #{userId},
+		lastEditUser = NOW('
+	WHERE
+		userId = #{userId};
+  </update>
 </mapper>

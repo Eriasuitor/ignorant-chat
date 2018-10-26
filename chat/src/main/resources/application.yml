@@ -20,3 +20,5 @@ spring:
       url: jdbc:mysql://localhost:3306/ic?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
       username: root
       password: 
+server:
+   port: 8090

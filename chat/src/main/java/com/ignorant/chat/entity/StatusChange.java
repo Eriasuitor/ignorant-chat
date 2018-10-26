@@ -2,10 +2,22 @@ package com.ignorant.chat.entity;
 
 import java.util.Date;
 
+import javax.persistence.Transient;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.ignorant.chat.Service.UserService;
 import com.ignorant.chat.enums.UserStatus;
 
-public class StatusChange implements SocketContent {
+@Component
+@Scope("prototype")
+public class StatusChange extends AbstracScocketContent {
+	@Autowired
+	@Transient
+	private UserService userService;
+
 	private String from;
 	private UserStatus status;
 	private Date date;
@@ -14,8 +26,8 @@ public class StatusChange implements SocketContent {
 		super();
 	}
 
-	public void start() {
-		UserService userService = new UserService();
+	public void start(String content) {
+		setFrom(getUserId());
 		userService.changeStatus(this);
 	}
 

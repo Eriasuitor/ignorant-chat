@@ -2,10 +2,15 @@ package com.ignorant.chat.entity;
 
 import java.util.Date;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.ignorant.chat.Service.UserService;
 import com.ignorant.chat.enums.UserInfoChangeType;
 
-public class InfoChange implements SocketContent {
+@Component
+@Scope("prototype")
+public class InfoChange extends AbstracScocketContent {
 	private String from;
 	private UserInfoChangeType type;
 	private String content;
@@ -15,14 +20,15 @@ public class InfoChange implements SocketContent {
 		super();
 	}
 
-	public void start() {
+	public void start(String content) {
 		UserService userService = new UserService();
+		setFrom(getUserId());
 		switch (type) {
 		case AVARTAR:
-			userService.changeAvatar(from, content, date);
+			userService.changeAvatar(this);
 			break;
 		case SIGNATURE:
-			userService.changeSignature(from, content, date);
+			userService.changeSignature(this);
 			break;
 		}
 	}

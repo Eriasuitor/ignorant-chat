@@ -3,150 +3,165 @@ package com.ignorant.pojo;
 import java.util.Date;
 import javax.persistence.*;
 
+import com.ignorant.chat.enums.MsgType;
+
 @Table(name = "msg_record")
 public class MsgRecord {
-    @Id
-    private Long id;
+	@Id
+	private Long id;
 
-    private String userId;
+	private String userId;
 
-    private String from;
+	private String from;
 
-    private String type;
+	private MsgType type;
 
-    private String content;
+	private String content;
 
-    private Date createDate;
+	private Date createDate;
 
-    private Date lastEditData;
+	private Date lastEditData;
 
-    private String createUser;
+	private String createUser;
 
-    private String lastEditUser;
+	private String lastEditUser;
 
-    /**
-     * @return id
-     */
-    public Long getId() {
-        return id;
-    }
+	public MsgRecord(String userId, String from, MsgType type, String content, Date createDate,
+			Date lastEditData, String createUser, String lastEditUser) {
+		super();
+		this.userId = userId;
+		this.from = from;
+		this.type = type;
+		this.content = content;
+		this.createDate = createDate;
+		this.lastEditData = lastEditData;
+		this.createUser = createUser;
+		this.lastEditUser = lastEditUser;
+	}
 
-    /**
-     * @param id
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @return id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return userId
-     */
-    public String getUserId() {
-        return userId;
-    }
+	/**
+	 * @param id
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param userId
-     */
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+	/**
+	 * @return userId
+	 */
+	public String getUserId() {
+		return userId;
+	}
 
-    /**
-     * @return from
-     */
-    public String getFrom() {
-        return from;
-    }
+	/**
+	 * @param userId
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-    /**
-     * @param from
-     */
-    public void setFrom(String from) {
-        this.from = from;
-    }
+	/**
+	 * @return from
+	 */
+	public String getFrom() {
+		return from;
+	}
 
-    /**
-     * @return type
-     */
-    public String getType() {
-        return type;
-    }
+	/**
+	 * @param from
+	 */
+	public void setFrom(String from) {
+		this.from = from;
+	}
 
-    /**
-     * @param type
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
+	/**
+	 * @return type
+	 */
+	public MsgType getType() {
+		return type;
+	}
 
-    /**
-     * @return content
-     */
-    public String getContent() {
-        return content;
-    }
+	/**
+	 * @param type
+	 */
+	public void setType(MsgType type) {
+		this.type = type;
+	}
 
-    /**
-     * @param content
-     */
-    public void setContent(String content) {
-        this.content = content;
-    }
+	/**
+	 * @return content
+	 */
+	public String getContent() {
+		return content;
+	}
 
-    /**
-     * @return createDate
-     */
-    public Date getCreateDate() {
-        return createDate;
-    }
+	/**
+	 * @param content
+	 */
+	public void setContent(String content) {
+		this.content = content;
+	}
 
-    /**
-     * @param createDate
-     */
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
+	/**
+	 * @return createDate
+	 */
+	public Date getCreateDate() {
+		return createDate;
+	}
 
-    /**
-     * @return lastEditData
-     */
-    public Date getLastEditData() {
-        return lastEditData;
-    }
+	/**
+	 * @param createDate
+	 */
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 
-    /**
-     * @param lastEditData
-     */
-    public void setLastEditData(Date lastEditData) {
-        this.lastEditData = lastEditData;
-    }
+	/**
+	 * @return lastEditData
+	 */
+	public Date getLastEditData() {
+		return lastEditData;
+	}
 
-    /**
-     * @return createUser
-     */
-    public String getCreateUser() {
-        return createUser;
-    }
+	/**
+	 * @param lastEditData
+	 */
+	public void setLastEditData(Date lastEditData) {
+		this.lastEditData = lastEditData;
+	}
 
-    /**
-     * @param createUser
-     */
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser;
-    }
+	/**
+	 * @return createUser
+	 */
+	public String getCreateUser() {
+		return createUser;
+	}
 
-    /**
-     * @return lastEditUser
-     */
-    public String getLastEditUser() {
-        return lastEditUser;
-    }
+	/**
+	 * @param createUser
+	 */
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
 
-    /**
-     * @param lastEditUser
-     */
-    public void setLastEditUser(String lastEditUser) {
-        this.lastEditUser = lastEditUser;
-    }
+	/**
+	 * @return lastEditUser
+	 */
+	public String getLastEditUser() {
+		return lastEditUser;
+	}
+
+	/**
+	 * @param lastEditUser
+	 */
+	public void setLastEditUser(String lastEditUser) {
+		this.lastEditUser = lastEditUser;
+	}
 }

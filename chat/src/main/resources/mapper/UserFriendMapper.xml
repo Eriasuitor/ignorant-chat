@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.ignorant.mapper.UserFriendMapper" >
+<mapper namespace="com.ignorant.chat.mapper.UserFriendMapper" >
   <resultMap id="BaseResultMap" type="com.ignorant.pojo.UserFriend" >
     <!--
       WARNING - @mbg.generated
@@ -43,6 +43,6 @@
 			NOW(),
 			#{userId},
 			#{userId}
-		);
+		)
   </insert>
 </mapper>
