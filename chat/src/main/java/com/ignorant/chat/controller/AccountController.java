@@ -120,8 +120,13 @@ public class AccountController {
 		return userService.queryUserListByUserId(q);
 	}
 
-	@GetMapping("/user/friend/message")
-	public List<Msg> queryMessage(Authentication user, String friendId, Long anchor) {
+	@GetMapping("/user/friend/{friendId}/message")
+	public List<Msg> queryMessage(Authentication user, @PathVariable String friendId, Long anchor) {
 		return userService.queryMsg(user.getName(), friendId, anchor);
 	}
+
+//	@GetMapping("/user/friend/message")
+//	public List<Msg> queryMessageBunch(Authentication user, List<String> friendIdList, Long anchor) {
+//		return userService.queryMsg(user.getName(), friendIdList, anchor);
+//	}
 }

@@ -40,7 +40,7 @@ public class UserService {
 
 	@Autowired
 	private MsgFlagMapper msgFlagMapper;
-	
+
 	@Autowired
 	private AccountMapper accountMapper;
 
@@ -57,8 +57,8 @@ public class UserService {
 	}
 
 	public void sendMsg(Msg msg) {
-		MsgRecord msgRecord = new MsgRecord(msg.getTo(), msg.getFrom(), msg.getType(), msg.getContent(),
-				msg.getDate(), msg.getDate(), msg.getFrom(), msg.getFrom());
+		MsgRecord msgRecord = new MsgRecord(msg.getTo(), msg.getFrom(), msg.getType(), msg.getContent(), msg.getDate(),
+				msg.getDate(), msg.getFrom(), msg.getFrom());
 		System.out.println(ReflectionToStringBuilder.reflectionToString(msgRecord));
 		Long msgId = msgRecordMapper.addMsg(msgRecord);
 		msg.setMsgId(msgId);
@@ -68,6 +68,8 @@ public class UserService {
 	}
 
 	public List<Msg> queryMsg(String userId, String friendId, Long anchor) {
+		if (anchor == null)
+			anchor = Long.MAX_VALUE;
 		List<MsgRecord> msgRecordList = msgRecordMapper.queryMsg(userId, friendId, anchor, 30);
 		List<Msg> result = new ArrayList<Msg>();
 		msgRecordList.forEach(item -> {

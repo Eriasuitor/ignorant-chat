@@ -56,29 +56,37 @@
 			msg_record
 		WHERE
 			userId = #{userId}
-			AND `from` = #{from}
-			AND id >= #{limitId}
+		AND `from` = #{from}
+		AND id  &lt; #{limitId}
+		ORDER BY
+			id DESC
+		LIMIT #{limit}
 	)
-	UNION(
-	SELECT
-		id,
-		userId,
-		`from`,
-		`type`,
-		content,
-		createDate,
-		lastEditData,
-		createUser,
-		lastEditUser
-	FROM
-		msg_record
-	WHERE
-		userId = #{from}
-		AND `from` = #{userId}
-		AND id >= #{limitId}
-	)
+	UNION
+		(
+			SELECT
+				id,
+				userId,
+				`from`,
+				`type`,
+				content,
+				createDate,
+				lastEditData,
+				createUser,
+				lastEditUser
+			FROM
+				msg_record
+			WHERE
+				userId = #{from}
+			AND `from` = #{userId}
+			AND id  &lt; #{limitId}
+			ORDER BY
+				id DESC
+			LIMIT #{limit}
+		)
 	ORDER BY
-	lastEditData LIMIT #{limit}
+		id DESC
+	LIMIT #{limit}
   </select>
   <!-- Abandon -->
   <select id="queryMsgBunch" resultType="java.util.List" resultMap="BaseResultMap">

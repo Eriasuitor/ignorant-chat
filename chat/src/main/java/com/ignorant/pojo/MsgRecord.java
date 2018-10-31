@@ -26,8 +26,8 @@ public class MsgRecord {
 
 	private String lastEditUser;
 
-	public MsgRecord(String userId, String from, MsgType type, String content, Date createDate,
-			Date lastEditData, String createUser, String lastEditUser) {
+	public MsgRecord(String userId, String from, MsgType type, String content, Date createDate, Date lastEditData,
+			String createUser, String lastEditUser) {
 		super();
 		this.userId = userId;
 		this.from = from;
@@ -37,6 +37,10 @@ public class MsgRecord {
 		this.lastEditData = lastEditData;
 		this.createUser = createUser;
 		this.lastEditUser = lastEditUser;
+	}
+
+	public MsgRecord() {
+		super();
 	}
 
 	/**
