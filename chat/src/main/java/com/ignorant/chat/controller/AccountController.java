@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,8 +66,8 @@ public class AccountController {
 //	}
 
 	@RequestMapping(value = "/authentication", method = RequestMethod.GET)
-	public GeneralResponse authenticationRequired(HttpServletResponse response) {
-		response.setStatus(HttpStatus.UNAUTHORIZED.value());
+	@ResponseStatus(value = HttpStatus.UNAUTHORIZED, reason = "aaaa?")
+	public GeneralResponse authenticationRequired() {
 		return new GeneralResponse("需要认证");
 	}
 
@@ -78,6 +79,12 @@ public class AccountController {
 	@GetMapping("/user/me")
 	public User getUserInfo(Authentication user) {
 		return userService.getUserInfo(user.getName());
+	}
+
+	@GetMapping("/user/{userId}")
+	public User getUserInfo(Authentication user, @PathVariable String userId) {
+		System.out.println(userId);
+		return userService.getUserInfo(userId);
 	}
 
 	@GetMapping("/user/friend")

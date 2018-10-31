@@ -18,7 +18,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		// TODO Auto-generated method stub
 		http.formLogin().loginPage("/authentication").loginProcessingUrl("/authentication")
 				.successHandler(authenticationSuccessHandler).and().authorizeRequests()
-				.antMatchers("/sign_in.html", "/authentication").permitAll().antMatchers(HttpMethod.OPTIONS).permitAll().anyRequest().authenticated().and().csrf()
-				.disable();
+				.antMatchers("/sign_in.html", "/authentication").permitAll().antMatchers(HttpMethod.OPTIONS).permitAll()
+				.anyRequest().authenticated().and().csrf().disable();
 	}
 }

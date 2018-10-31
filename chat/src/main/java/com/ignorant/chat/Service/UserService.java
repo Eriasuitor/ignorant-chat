@@ -57,18 +57,14 @@ public class UserService {
 	}
 
 	public void sendMsg(Msg msg) {
-		System.out.println(6);
 		MsgRecord msgRecord = new MsgRecord(msg.getTo(), msg.getFrom(), msg.getType(), msg.getContent(),
 				msg.getDate(), msg.getDate(), msg.getFrom(), msg.getFrom());
 		System.out.println(ReflectionToStringBuilder.reflectionToString(msgRecord));
 		Long msgId = msgRecordMapper.addMsg(msgRecord);
 		msg.setMsgId(msgId);
-		System.out.println(7);
 		SocketData socketDate = new SocketData(ContentType.msg, JsonUtils.objectToJson(msg));
-		System.out.println(8);
 		WebSocketManager.send(msg.getFrom(), socketDate);
-		System.out.println(8);
-		WebSocketManager.send(msg.getTo(), socketDate);System.out.println(10);
+		WebSocketManager.send(msg.getTo(), socketDate);
 	}
 
 	public List<Msg> queryMsg(String userId, String friendId, Long anchor) {
