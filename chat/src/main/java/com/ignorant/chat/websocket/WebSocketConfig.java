@@ -10,7 +10,8 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket // 声明支持websocket  
 public class WebSocketConfig implements WebSocketConfigurer {  
   
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {  
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) { 
+    	System.out.println(1111111);
         // 注册websocket实现类，指定参数访问地址;allowed-origins="*" 允许跨域  
         // addHandler是增加处理接口和设定URL  
         // addInterceptors是增加拦截器处理（可以不用）  
@@ -27,7 +28,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
     }  
   
     @Bean  
-    public MyHandshakeInterceptor myHandshake() {  
+    public MyHandshakeInterceptor myHandshake() {
+    	System.out.println(222222222);
         return new MyHandshakeInterceptor();  
     }  
 }  

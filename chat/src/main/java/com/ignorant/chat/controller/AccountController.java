@@ -30,6 +30,7 @@ import com.ignorant.chat.Service.UserService;
 import com.ignorant.chat.entity.GeneralResponse;
 import com.ignorant.chat.entity.Msg;
 import com.ignorant.chat.mapper.AccountMapper;
+import com.ignorant.chat.wcs.WcsService;
 import com.ignorant.pojo.User;
 
 import tk.mybatis.spring.annotation.MapperScan;
@@ -48,6 +49,10 @@ public class AccountController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private WcsService wcsService;
+
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	@ResponseBody
@@ -123,6 +128,12 @@ public class AccountController {
 	@GetMapping("/user/friend/{friendId}/message")
 	public List<Msg> queryMessage(Authentication user, @PathVariable String friendId, Long anchor) {
 		return userService.queryMsg(user.getName(), friendId, anchor);
+	}
+	
+	@PostMapping("/wcs")
+	public String loginWcs(Authentication user) {
+		wcsService.loginWcs(user.getName());
+		return null;
 	}
 
 //	@GetMapping("/user/friend/message")
