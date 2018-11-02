@@ -22,6 +22,7 @@ import com.ignorant.chat.mapper.MsgRecordMapper;
 import com.ignorant.chat.mapper.UserFriendMapper;
 import com.ignorant.chat.mapper.UserMapper;
 import com.ignorant.chat.utils.JsonUtils;
+import com.ignorant.chat.wcs.WcsService;
 import com.ignorant.chat.websocket.WebSocketManager;
 import com.ignorant.pojo.MsgRecord;
 import com.ignorant.pojo.User;
@@ -44,6 +45,9 @@ public class UserService {
 	@Autowired
 	private AccountMapper accountMapper;
 
+	@Autowired
+	private WcsService wcsService;
+
 	public void changeAvatar(InfoChange infochange) {
 		userMapper.changeAvatar(infochange.getFrom(), infochange.getContent(), infochange.getDate());
 	}
@@ -57,6 +61,10 @@ public class UserService {
 	}
 
 	public void sendMsg(Msg msg) {
+		if (msg.getUserId().startsWith("@")) {
+			wcsService.sendMsg(msg);
+			return;
+		}
 		MsgRecord msgRecord = new MsgRecord(msg.getTo(), msg.getFrom(), msg.getType(), msg.getContent(), msg.getDate(),
 				msg.getDate(), msg.getFrom(), msg.getFrom());
 		System.out.println(ReflectionToStringBuilder.reflectionToString(msgRecord));

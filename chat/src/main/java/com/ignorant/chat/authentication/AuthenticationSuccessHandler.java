@@ -41,7 +41,6 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		System.out.println(1111);
 		String header = request.getHeader("Authorization");
 
 		if (header == null || !header.startsWith("Basic ")) {

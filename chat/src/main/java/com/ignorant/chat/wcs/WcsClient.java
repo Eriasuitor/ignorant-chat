@@ -57,6 +57,16 @@ public class WcsClient {
 		}
 	}
 	
+	public void sendMsg(String userId, String content) {
+		CharSequence charSequence = new SafeString(String.format("{\"type\": \"msg\", \"userId\": \"%s\", \"content\": \"%s\"}", userId, content));
+		try {
+			webSocketSession.sendMessage(new TextMessage(charSequence));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Bean
 	public WcsHandler wcsHandler() {
 		return new WcsHandler();

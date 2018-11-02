@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.net.HttpHeaders;
 import com.ignorant.chat.Service.UserInfoService;
 import com.ignorant.chat.Service.UserService;
 import com.ignorant.chat.entity.GeneralResponse;
@@ -131,9 +132,9 @@ public class AccountController {
 	}
 	
 	@PostMapping("/wcs")
-	public String loginWcs(Authentication user) {
+	public void loginWcs(Authentication user, HttpServletResponse response) {
 		wcsService.loginWcs(user.getName());
-		return null;
+		response.setContentType("application/json");;
 	}
 
 //	@GetMapping("/user/friend/message")
