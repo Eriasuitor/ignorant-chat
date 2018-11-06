@@ -45,4 +45,27 @@
 			#{userId}
 		)
   </insert>
+  <insert id="addFriendByBunch" parameterType="java.util.List">
+	INSERT
+		INTO
+			user_friend(
+				userId,
+				friendId,
+				createDate,
+				lastEditData,
+				createUser,
+				lastEditUser
+			)
+		VALUES
+		<foreach collection="friendIdList" item="item" separator="," >
+			(
+				#{userId},
+				#{item},
+				NOW(),
+				NOW(),
+				#{userId},
+				#{userId})
+			)
+		</foreach>
+  </insert>
 </mapper>

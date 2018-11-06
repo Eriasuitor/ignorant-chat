@@ -113,4 +113,44 @@
 	WHERE
 		userId = #{userId};
   </update>
+  
+  <insert id="addUserByBunch" parameterType="java.util.List">
+	INSERT
+		INTO
+			user(
+				userId,
+				nickName,
+				gender,
+				age,
+				avatar,
+				avatar_small,
+				city,
+				`type`,
+				status,
+				signature,
+				createDate,
+				lastEditData,
+				createUser,
+				lastEditUser
+			)
+		VALUES
+		<foreach collection="userList" item="item" separator="," >
+			(
+				#{item.userId},
+				#{item.nickName},
+				#{item.gender},
+				#{item.age},
+				#{item.avatar},
+				#{item.avatar_small},
+				#{item.city},
+				#{item.type},
+				#{item.status},
+				#{item.signature},
+				NOW(),
+				NOW(),
+				#{userId},
+				#{userId})
+			)
+		</foreach>
+  </insert>
 </mapper>

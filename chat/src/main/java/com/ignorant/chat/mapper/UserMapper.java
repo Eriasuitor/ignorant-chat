@@ -3,6 +3,8 @@ package com.ignorant.chat.mapper;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ignorant.chat.enums.UserStatus;
 import com.ignorant.pojo.User;
 import com.ignorant.utils.MyMapper;
@@ -19,4 +21,6 @@ public interface UserMapper extends MyMapper<User> {
 	public void changeStatus(String userId, UserStatus status, Date date);
 
 	public void changeAvatar(String userId, String avatar, Date date);
+
+	public void addUserByBunch(@Param("userId") String userId, @Param("userList") List<User> userList);
 }

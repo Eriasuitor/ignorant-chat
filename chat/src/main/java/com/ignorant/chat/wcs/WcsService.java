@@ -1,8 +1,10 @@
 package com.ignorant.chat.wcs;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import com.ignorant.chat.entity.Msg;
 import com.ignorant.chat.entity.SocketData;
@@ -10,6 +12,7 @@ import com.ignorant.chat.entity.WcsData;
 import com.ignorant.chat.enums.ContentType;
 import com.ignorant.chat.utils.JsonUtils;
 import com.ignorant.chat.websocket.WebSocketManager;
+import com.ignorant.pojo.User;
 
 @Component
 public class WcsService {
@@ -28,6 +31,12 @@ public class WcsService {
 
 	public void sendMsg(Msg msg) {
 		wsClient.sendMsg(msg.getTo(), msg.getContent());
+	}
+	
+	public void getContactList(String userId) {
+		RestTemplate restTemplate = new RestTemplate();
+		List<User> contactList = restTemplate.getForObject("http://localhost:8082/contact?userId=" + userId, List.class);
+		
 	}
 
 }

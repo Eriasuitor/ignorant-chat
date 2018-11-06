@@ -136,4 +136,27 @@ public class UserService {
 	public void updateCurrent(String userId, Long current) {
 		msgFlagMapper.updateCurrent(userId, current);
 	}
+	
+	public void addUser() {
+		
+	}
+	
+	public void addFriend(String userId, List<String> friendIdList)
+			throws NotFoundException, NotActiveException, NoninvertibleTransformException {
+		friendIdList.forEach(friendId -> {
+			User friend = getUserInfo(friendId);
+			if (friend == null) {
+				throw new NotFoundException(String.format("user %s is not found", friendId));
+			}
+			User user = getUserInfo(userId);
+			if (user == null) {
+				throw new NotActiveException(String.format("acount %s is invalid", userId));
+			}
+			if (isFriend(userId, friendId)) {
+				throw new NoninvertibleTransformException(
+						String.format("user %S was friend of user %s yet", friendId, userId));
+			}
+		});
+		userFriendMapper.addFriendByBunch(userId, friendIdList);
+	}
 }
