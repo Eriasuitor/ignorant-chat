@@ -19,10 +19,16 @@ public class WebSocketService {
 	private ApplicationContext context;
 
 	public void operate(String userId, Object data) {
-		SocketData socketData = JsonUtils.jsonToPojo((String) data, SocketData.class);
-		AbstracScocketContent abstracSocketContent = (AbstracScocketContent) context.getBean(socketData.getType().name());
-		abstracSocketContent.setUserId(userId);
-		System.out.println("com.ignorant.chat.entity." + socketData.getType().name());
-		abstracSocketContent.start(socketData.getContent());
+		try {
+			SocketData socketData = JsonUtils.jsonToPojo((String) data, SocketData.class);
+			AbstracScocketContent abstracSocketContent = (AbstracScocketContent) context.getBean(socketData.getType().name());
+			abstracSocketContent.setUserId(userId);
+			System.out.println("com.ignorant.chat.entity." + socketData.getType().name());
+			abstracSocketContent.start(socketData.getContent());
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("格式化文件出错" + JsonUtils.objectToJson(data));
+		}
 	}
 }

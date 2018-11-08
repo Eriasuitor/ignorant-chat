@@ -28,7 +28,6 @@ public class WcsClient {
 		WebSocketClient client = new StandardWebSocketClient();
 		ListenableFuture<WebSocketSession> a = client.doHandshake(wcsHandler(), "ws://localhost:8081");
 		a.addCallback(new SuccessCallback<Object>() {
-			@Override
 			public void onSuccess(Object result) {
 				webSocketSession = (WebSocketSession) result;
 				System.out.println(0);
@@ -38,7 +37,6 @@ public class WcsClient {
 			}
 
 		}, new FailureCallback() {
-			@Override
 			public void onFailure(Throwable ex) {
 				// TODO Auto-generated method stub
 				ex.printStackTrace();
@@ -56,9 +54,11 @@ public class WcsClient {
 			e.printStackTrace();
 		}
 	}
-	
-	public void sendMsg(String userId, String content) {
-		CharSequence charSequence = new SafeString(String.format("{\"type\": \"msg\", \"userId\": \"%s\", \"content\": \"%s\"}", userId, content));
+
+	public void sendMsg(String userId, String toUserId, String content) {
+		CharSequence charSequence = new SafeString(
+				String.format("{\"type\": \"msg\", \"userId\": \"%s\", \"content\": \"%s\", \"to\":\"%s\" }", userId,
+						content, toUserId));
 		try {
 			webSocketSession.sendMessage(new TextMessage(charSequence));
 		} catch (IOException e) {
@@ -66,7 +66,7 @@ public class WcsClient {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Bean
 	public WcsHandler wcsHandler() {
 		return new WcsHandler();

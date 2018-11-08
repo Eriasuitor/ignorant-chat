@@ -61,7 +61,7 @@ public class UserService {
 	}
 
 	public void sendMsg(Msg msg) {
-		if (msg.getUserId().startsWith("@")) {
+		if (getUserInfo(msg.getTo()) == null) {
 			wcsService.sendMsg(msg);
 			return;
 		}
@@ -136,14 +136,14 @@ public class UserService {
 	public void updateCurrent(String userId, Long current) {
 		msgFlagMapper.updateCurrent(userId, current);
 	}
-	
+
 	public void addUser() {
-		
+
 	}
-	
+
 	public void addFriend(String userId, List<String> friendIdList)
 			throws NotFoundException, NotActiveException, NoninvertibleTransformException {
-		friendIdList.forEach(friendId -> {
+		for (String friendId : friendIdList) {
 			User friend = getUserInfo(friendId);
 			if (friend == null) {
 				throw new NotFoundException(String.format("user %s is not found", friendId));
@@ -156,7 +156,7 @@ public class UserService {
 				throw new NoninvertibleTransformException(
 						String.format("user %S was friend of user %s yet", friendId, userId));
 			}
-		});
+		}
 		userFriendMapper.addFriendByBunch(userId, friendIdList);
 	}
 }
