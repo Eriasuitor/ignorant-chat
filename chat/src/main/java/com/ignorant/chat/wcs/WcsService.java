@@ -22,7 +22,7 @@ public class WcsService {
 	@Autowired
 	private WcsClient wsClient;
 	
-	private static ConcurrentMap<String, List<User>> user2Contact = new ConcurrentHashMap<String,  List<User>>();
+	private static ConcurrentMap<String, List<Contact>> user2Contact = new ConcurrentHashMap<String,  List<Contact>>();
 
 	public void loginWcs(String userId) {
 		wsClient.loginWc(userId);
@@ -40,7 +40,8 @@ public class WcsService {
 	public void getContactList(String userId) {
 		RestTemplate restTemplate = new RestTemplate();
 		@SuppressWarnings("unchecked")
-		List<User> contactList = restTemplate.getForObject("http://localhost:8082/contact?userId=" + userId, List.class);
+		List<Contact> contactList = restTemplate.getForObject("http://localhost:8082/contact?userId=" + userId, List.class);
 		user2Contact.put(userId, contactList);
+		System.out.println(contactList);
 	}
 }
