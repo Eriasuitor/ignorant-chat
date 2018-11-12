@@ -9,9 +9,14 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-
 @Component
 public class WcsHandler implements WebSocketHandler {
+
+	@Autowired
+	private WcsService wcsService;
+
+	@Autowired
+	private WcsClient wcsClient;
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -22,11 +27,12 @@ public class WcsHandler implements WebSocketHandler {
 	public void handleMessage(WebSocketSession webSocketSession, WebSocketMessage<?> webSocketMessage)
 			throws Exception {
 		logger.info(String.format("wcs data received %s", webSocketMessage.getPayload()));
-		WcsService.handleWcsData(webSocketMessage.getPayload());
+		wcsService.handleWcsData(webSocketMessage.getPayload());
 	}
 
 	public void afterConnectionClosed(WebSocketSession webSocketSession, CloseStatus arg1) throws Exception {
 		logger.error(String.format("wcs client disconnected with code: %s", arg1.getCode()));
+		wcsClient.init();
 	}
 
 	public void handleTransportError(WebSocketSession webSocketSession, Throwable e) throws Exception {

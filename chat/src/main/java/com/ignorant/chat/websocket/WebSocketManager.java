@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.jknack.handlebars.Handlebars.SafeString;
 import com.ignorant.chat.entity.SocketData;
 import com.ignorant.chat.utils.JsonUtils;
@@ -35,7 +36,7 @@ public class WebSocketManager {
 		WebSocketSession webSocketSession = getSocket(userId);
 		if (webSocketSession == null)
 			return false;
-		CharSequence charSequence = new SafeString(JsonUtils.objectToJson(socketData));
+		CharSequence charSequence = new SafeString(JSONObject.toJSONString(socketData));
 		try {
 			webSocketSession.sendMessage(new TextMessage(charSequence));
 			logger.info(String.format("send message [%s] to user %s", charSequence, userId));

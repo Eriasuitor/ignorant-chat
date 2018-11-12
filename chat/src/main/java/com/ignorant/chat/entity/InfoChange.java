@@ -20,7 +20,7 @@ public class InfoChange extends AbstracScocketContent {
 		super();
 	}
 
-	public void start(String content) {
+	public void start(AbstracScocketContent content) {
 		UserService userService = new UserService();
 		setFrom(getUserId());
 		switch (type) {

@@ -16,7 +16,7 @@ public class Msg extends AbstracScocketContent {
 
 	@Autowired
 	private UserService userService;
-	
+
 	private String from;
 	private String to;
 	private MsgType type;
@@ -27,7 +27,7 @@ public class Msg extends AbstracScocketContent {
 	public Msg() {
 		super();
 	}
-	
+
 	public Msg(String from, String to, MsgType type, String content, Long msgId, Date date) {
 		super();
 		this.from = from;
@@ -38,9 +38,9 @@ public class Msg extends AbstracScocketContent {
 		this.date = date;
 	}
 
-	public void start(String content) {
-		Msg msg = JsonUtils.jsonToPojo(content, getClass());
-		setFrom(getUserId());
+	public void start(AbstracScocketContent content) {
+		Msg msg = (Msg) content;
+		setFrom(msg.getUserId());
 		setTo(msg.getTo());
 		setType(msg.getType());
 		setContent(msg.getContent());

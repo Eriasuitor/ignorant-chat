@@ -26,7 +26,7 @@ public class StatusChange extends AbstracScocketContent {
 		super();
 	}
 
-	public void start(String content) {
+	public void start(AbstracScocketContent content) {
 		setFrom(getUserId());
 		userService.changeStatus(this);
 	}

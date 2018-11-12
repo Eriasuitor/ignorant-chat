@@ -6,15 +6,20 @@ import com.ignorant.chat.enums.ContentType;
 
 public class SocketData {
 	private ContentType type;
-	private List<Long> synId;
-	private String content;
+	private List<String> synIdList;
+	private AbstracScocketContent content;
 
 	public SocketData() {
 	}
 
-	public SocketData(ContentType type, String content) {
+	public SocketData(ContentType type, AbstracScocketContent content, List<String> syncIdList) {
 		this.type = type;
 		this.content = content;
+		this.synIdList = syncIdList;
+	}
+
+	public SocketData(ContentType type, AbstracScocketContent content) {
+		this(type, content, null);
 	}
 
 	public ContentType getType() {
@@ -25,19 +30,19 @@ public class SocketData {
 		this.type = type;
 	}
 
-	public List<Long> getSynId() {
-		return synId;
+	public List<String> getSynIdList() {
+		return synIdList;
 	}
 
-	public void setSynId(List<Long> synId) {
-		this.synId = synId;
+	public void setSynIdList(List<String> synIdList) {
+		this.synIdList = synIdList;
 	}
 
-	public String getContent() {
+	public AbstracScocketContent getContent() {
 		return content;
 	}
 
-	public void setContent(String content) {
+	public void setContent(AbstracScocketContent content) {
 		this.content = content;
 	}
 

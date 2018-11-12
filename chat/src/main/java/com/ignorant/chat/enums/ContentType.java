@@ -1,5 +1,5 @@
 package com.ignorant.chat.enums;
 
 public enum ContentType {
-	ping, msg, statusChange, infoChange, wcsMsg
+	ping, msg, statusChange, infoChange, wcsNotification, sync, refreshFriendList
 }

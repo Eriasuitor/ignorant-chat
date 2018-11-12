@@ -1,4 +1,4 @@
-package com.ignorant.chat.wcs;
+package com.ignorant.chat.wcs.entity;
 
 public class Contact {
 

@@ -16,6 +16,7 @@ import com.ignorant.chat.entity.Msg;
 import com.ignorant.chat.entity.SocketData;
 import com.ignorant.chat.entity.StatusChange;
 import com.ignorant.chat.enums.ContentType;
+import com.ignorant.chat.enums.MsgType;
 import com.ignorant.chat.mapper.AccountMapper;
 import com.ignorant.chat.mapper.MsgFlagMapper;
 import com.ignorant.chat.mapper.MsgRecordMapper;
@@ -24,6 +25,7 @@ import com.ignorant.chat.mapper.UserMapper;
 import com.ignorant.chat.utils.JsonUtils;
 import com.ignorant.chat.wcs.WcsService;
 import com.ignorant.chat.websocket.WebSocketManager;
+import com.ignorant.chat.websocket.WebSocketService;
 import com.ignorant.pojo.MsgRecord;
 import com.ignorant.pojo.User;
 
@@ -44,6 +46,9 @@ public class UserService {
 
 	@Autowired
 	private AccountMapper accountMapper;
+
+	@Autowired
+	private WebSocketService webSocketService;
 
 	@Autowired
 	private WcsService wcsService;
@@ -67,12 +72,14 @@ public class UserService {
 		}
 		MsgRecord msgRecord = new MsgRecord(msg.getTo(), msg.getFrom(), msg.getType(), msg.getContent(), msg.getDate(),
 				msg.getDate(), msg.getFrom(), msg.getFrom());
-		System.out.println(ReflectionToStringBuilder.reflectionToString(msgRecord));
-		Long msgId = msgRecordMapper.addMsg(msgRecord);
-		msg.setMsgId(msgId);
-		SocketData socketDate = new SocketData(ContentType.msg, JsonUtils.objectToJson(msg));
-		WebSocketManager.send(msg.getFrom(), socketDate);
-		WebSocketManager.send(msg.getTo(), socketDate);
+		msg.setMsgId(msgRecordMapper.addMsg(msgRecord));
+		SocketData socketDate = new SocketData(ContentType.msg, msg);
+		if (WebSocketManager.send(msg.getFrom(), socketDate) && WebSocketManager.send(msg.getTo(), socketDate))
+			this.sync(msg.getUserId(), msg.getSyncIdList());
+	}
+
+	public void sync(String userId, List<String> syncIdList) {
+		webSocketService.send(userId, new SocketData(ContentType.sync, null, syncIdList));
 	}
 
 	public List<Msg> queryMsg(String userId, String friendId, Long anchor) {
@@ -96,7 +103,17 @@ public class UserService {
 	}
 
 	public List<User> getFriendList(String userId) {
-		return userMapper.getFriendList(userId);
+		List<User> wcInitFriendList = wcsService.getInitContact(userId);
+		List<User> friendList = userMapper.getFriendList(userId);
+		List<User> result = new List<User>();
+		int i = Math.min(wcInitFriendList.size(), friendList.size());
+		while(i-- >= 0) {
+			result.add(wcInitFriendList.get(i));
+			result.add(friendList.get(i));
+		}
+		
+		wcInitFriendList.addAll(wcInitFriendList);
+		return wcInitFriendList;
 	}
 
 	public User getUserInfo(String userId) {
