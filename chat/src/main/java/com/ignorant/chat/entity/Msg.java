@@ -42,11 +42,12 @@ public class Msg extends AbstracScocketContent {
 		Msg msg = (Msg) content;
 		setFrom(msg.getUserId());
 		setTo(msg.getTo());
+		setUserId(msg.getUserId());
 		setType(msg.getType());
 		setContent(msg.getContent());
+		setSyncIdList(msg.getSyncIdList());
 		setDate(new Date());
 		userService.sendMsg(this);
-		System.out.println(5);
 	}
 
 	public String getFrom() {

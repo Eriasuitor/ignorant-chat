@@ -123,7 +123,7 @@ public class AccountController {
 
 	@GetMapping("/user")
 	public List<User> queryUser(Authentication user, @RequestParam String q) {
-		return userService.queryUserListByUserId(q);
+		return userService.queryUserListByUserId(user.getName(), q);
 	}
 
 	@GetMapping("/user/friend/{friendId}/message")

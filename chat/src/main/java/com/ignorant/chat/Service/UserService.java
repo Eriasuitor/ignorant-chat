@@ -72,10 +72,18 @@ public class UserService {
 		}
 		MsgRecord msgRecord = new MsgRecord(msg.getTo(), msg.getFrom(), msg.getType(), msg.getContent(), msg.getDate(),
 				msg.getDate(), msg.getFrom(), msg.getFrom());
-		msg.setMsgId(msgRecordMapper.addMsg(msgRecord));
+		msgRecordMapper.addMsg(msgRecord);
+		msg.setMsgId(msgRecord.getId());
+		System.out.println(msgRecord.getId());
 		SocketData socketDate = new SocketData(ContentType.msg, msg);
-		if (WebSocketManager.send(msg.getFrom(), socketDate) && WebSocketManager.send(msg.getTo(), socketDate))
-			this.sync(msg.getUserId(), msg.getSyncIdList());
+		if (msg.getFrom().equals(msg.getUserId()))
+			WebSocketManager.send(msg.getTo(), socketDate);
+		else if (msg.getTo().equals(msg.getUserId()))
+			WebSocketManager.send(msg.getFrom(), socketDate);
+		else {
+			throw new RuntimeException("neither to nor from is not match to userId");
+		}
+		this.sync(msg.getUserId(), msg.getSyncIdList());
 	}
 
 	public void sync(String userId, List<String> syncIdList) {
@@ -104,16 +112,28 @@ public class UserService {
 
 	public List<User> getFriendList(String userId) {
 		List<User> wcInitFriendList = wcsService.getInitContact(userId);
-		List<User> friendList = userMapper.getFriendList(userId);
-		List<User> result = new List<User>();
-		int i = Math.min(wcInitFriendList.size(), friendList.size());
-		while(i-- >= 0) {
-			result.add(wcInitFriendList.get(i));
-			result.add(friendList.get(i));
+		for (int i = 0; i < wcInitFriendList.size(); i++) {
+			for (int j = 0; j < i; j++) {
+				if (wcInitFriendList.get(i).getUserId().equals(wcInitFriendList.get(j).getUserId())) {
+					wcInitFriendList.remove(i--);
+				}
+			}
 		}
-		
-		wcInitFriendList.addAll(wcInitFriendList);
-		return wcInitFriendList;
+		List<User> friendList = userMapper.getFriendList(userId);
+		friendList.forEach(f -> f.setMsgRecord(this.queryMsg(userId, f.getUserId(), null)));
+		wcInitFriendList.forEach(f -> f.setMsgRecord(new ArrayList<>()));
+		List<User> result = new ArrayList<User>();
+		int i = Math.min(wcInitFriendList.size(), friendList.size()), j = -1;
+		while (++j < i) {
+			result.add(wcInitFriendList.get(j));
+			result.add(friendList.get(j));
+		}
+		if (wcInitFriendList.size() > friendList.size()) {
+			result.addAll(wcInitFriendList.subList(i, wcInitFriendList.size() - 1));
+		} else if (wcInitFriendList.size() < friendList.size()) {
+			result.addAll(friendList.subList(i, friendList.size() - 1));
+		}
+		return result;
 	}
 
 	public User getUserInfo(String userId) {
@@ -142,8 +162,21 @@ public class UserService {
 		return userFriendMapper.isFriend(userId, friendId);
 	}
 
-	public List<User> queryUserListByUserId(String userIdPrefix) {
-		return userMapper.queryUserListByUserId(userIdPrefix);
+	public List<User> queryUserListByUserId(String userId, String userIdPrefix) {
+		List<User> wcInitFriendList = wcsService.queryContact(userId, userIdPrefix);
+		List<User> friendList = userMapper.queryUserListByUserId(userIdPrefix);
+		List<User> result = new ArrayList<User>();
+		int i = Math.min(wcInitFriendList.size(), friendList.size()), j = -1;
+		while (++j < i) {
+			result.add(wcInitFriendList.get(j));
+			result.add(friendList.get(j));
+		}
+		if (wcInitFriendList.size() > friendList.size()) {
+			result.addAll(wcInitFriendList.subList(i, wcInitFriendList.size() - 1));
+		} else if (wcInitFriendList.size() < friendList.size()) {
+			result.addAll(friendList.subList(i, friendList.size() - 1));
+		}
+		return result;
 	}
 
 	public void updatePeak(String userId, Long peak) {

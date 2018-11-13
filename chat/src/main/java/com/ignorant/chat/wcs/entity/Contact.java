@@ -2,7 +2,7 @@ package com.ignorant.chat.wcs.entity;
 
 public class Contact {
 
-	private String UserName;
+	private String userName;
 
 	private String NickName;
 
@@ -17,11 +17,11 @@ public class Contact {
 	private int Status;
 
 	public String getUserName() {
-		return UserName;
+		return this.userName;
 	}
 
 	public void setUserName(String userName) {
-		UserName = userName;
+		this.userName = userName;
 	}
 
 	public String getNickName() {

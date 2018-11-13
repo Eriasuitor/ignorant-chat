@@ -1,5 +1,6 @@
 package com.ignorant.chat.wcs.entity;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import com.ignorant.chat.websocket.WebSocketService;
 @Scope("prototype")
 public class Scanned implements WcsSocketContent {
 
+	@Autowired
 	private WebSocketService webSocketService;
 
 	@Override

@@ -1,9 +1,10 @@
 package com.ignorant.chat.wcs;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -12,13 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ignorant.chat.entity.Msg;
-import com.ignorant.chat.entity.SocketData;
-import com.ignorant.chat.enums.ContentType;
 import com.ignorant.chat.utils.JsonUtils;
 import com.ignorant.chat.wcs.entity.Contact;
 import com.ignorant.chat.wcs.entity.WcsSocketContent;
@@ -44,7 +44,10 @@ public class WcsService {
 	@Autowired
 	private ApplicationContext context;
 
-	private static ConcurrentMap<String, List<User>> user2Contact = new ConcurrentHashMap<String, List<User>>();
+//	@Autowired
+//	private RestTemplate restTemplate;
+
+	public static ConcurrentMap<String, User> user2WcInfo = new ConcurrentHashMap<String, User>();
 
 	public void loginWcs(String userId) {
 		wsClient.loginWc(userId);
@@ -77,49 +80,71 @@ public class WcsService {
 	}
 
 	public boolean sendMsg(Msg msg) {
-		List<User> userList = WcsService.user2Contact.get(msg.getUserId());
-		if (userList == null || userList.stream().noneMatch(c -> c.getUserId().equals(msg.getTo())))
-			return false;
 		return wsClient.sendMsg(msg.getUserId(), msg.getTo(), msg.getContent(),
 				msg.getSyncIdList().get(msg.getSyncIdList().size() - 1));
 	}
 
-	public List<User> queryContact(String userId, String q) {
+	public static void main(String[] args) {
 		RestTemplate restTemplate = new RestTemplate();
-		@SuppressWarnings("unchecked")
-		List<Contact> contactList = restTemplate
-				.getForObject(String.format("http://localhost:8082/contact?userId=%s?q=%s", userId, q), List.class);
-		contactList = contactList.subList(0, 3000);
-		return contactList.stream().map(c -> {
-			User user = new User();
-			user.setUserId(c.getUserName());
-			user.setNickName(c.getNickName());
-			user.setAvatar(c.getHeadImgUrl());
-			user.setAvatar_small(c.getHeadImgUrl());
-			user.setGender(c.getSex());
-			user.setSignature(c.getSignature());
-//			user.setStatus(c.getStatus());
-			user.setType("wc");
-			return user;
-		}).collect(Collectors.toList());
+		ResponseEntity<Contact[]> responseEntity = restTemplate
+				.getForEntity("http://localhost:8082/contact/init?userId=Lory.Y.Jiang", Contact[].class);
+		System.out.println(responseEntity.getBody()[0].getHeadImgUrl());
+		int i = 0;
+		System.out.println(new Integer(i).toString());
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<User> queryContact(String userId, String q) {
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			List<Map<String, Object>> response = restTemplate
+					.getForObject(String.format("http://localhost:8082/contact?userId=%s?q=%s", userId, q), List.class);
+			List<User> result = new ArrayList<>();
+			response = response.subList(0, Math.min(3000, response.size()));
+			for (Map<String, Object> m : response) {
+				User user = new User();
+				user.setUserId(m.get("UserName").toString());
+				user.setNickName(m.get("NickName").toString());
+				user.setAvatar("https://wx2.qq.com" + m.get("HeadImgUrl").toString());
+				user.setAvatar_small("https://wx2.qq.com" + m.get("HeadImgUrl").toString());
+				user.setGender(m.get("Sex").toString());
+				user.setSignature(m.get("Signature").toString());
+				user.setType("wc");
+				result.add(user);
+			}
+			return result;
+		} catch (Exception e) {
+			logger.error(String.format("query contact failed: %s", e.getMessage()));
+			return new ArrayList<>();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
 	public List<User> getInitContact(String userId) {
-		RestTemplate restTemplate = new RestTemplate();
-		@SuppressWarnings("unchecked")
-		List<Contact> contactList = restTemplate.getForObject("http://localhost:8082/contact/init?userId=" + userId,
-				List.class);
-		return contactList.stream().map(c -> {
-			User user = new User();
-			user.setUserId(c.getUserName());
-			user.setNickName(c.getNickName());
-			user.setAvatar(c.getHeadImgUrl());
-			user.setAvatar_small(c.getHeadImgUrl());
-			user.setGender(c.getSex());
-			user.setSignature(c.getSignature());
-//			user.setStatus(c.getStatus());
-			user.setType("wc");
-			return user;
-		}).collect(Collectors.toList());
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			List<Map<String, Object>> response = restTemplate
+					.getForObject("http://localhost:8082/contact/init?userId=" + userId, List.class);
+			List<User> result = new ArrayList<>();
+			System.out.println(response.size());
+			response = response.subList(0, Math.min(30, response.size()));
+			for (Map<String, Object> m : response) {
+				User user = new User();
+				user.setUserId(m.get("UserName").toString());
+				user.setNickName(m.get("NickName").toString());
+				user.setAvatar("https://wx2.qq.com" + m.get("HeadImgUrl").toString());
+				user.setAvatar_small("https://wx2.qq.com" + m.get("HeadImgUrl").toString());
+				user.setGender(m.get("Sex").toString());
+				user.setSignature(m.get("Signature").toString());
+				user.setType("wc");
+				result.add(user);
+			}
+			System.out.println(result.size());
+			return result;
+		} catch (Exception e) {
+			logger.error(String.format("get init contact failed: %s", e.getMessage()));
+			return new ArrayList<>();
+		}
+
 	}
 }

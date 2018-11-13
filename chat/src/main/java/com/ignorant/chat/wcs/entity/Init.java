@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.ignorant.chat.entity.SocketData;
 import com.ignorant.chat.entity.WcsInit;
 import com.ignorant.chat.enums.ContentType;
+import com.ignorant.chat.wcs.WcsService;
 import com.ignorant.chat.websocket.WebSocketService;
 import com.ignorant.pojo.User;
 
@@ -28,6 +29,10 @@ public class Init extends Contact implements WcsSocketContent {
 		user.setAvatar_small(contact.getHeadImgUrl());
 		user.setGender(contact.getSex());
 		user.setSignature(contact.getSignature());
+		System.out.println("add");
+		System.out.println(userId);
+		System.out.println(user);
+		WcsService.user2WcInfo.put(userId, user);
 		websocketService.send(userId, new SocketData(ContentType.wcsNotification, new WcsInit(user)));
 	}
 

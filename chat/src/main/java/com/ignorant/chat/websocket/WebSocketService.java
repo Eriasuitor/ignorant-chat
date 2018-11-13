@@ -1,6 +1,5 @@
 package com.ignorant.chat.websocket;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class WebSocketService {
 
 	public void operate(String userId, Object data) {
 		try {
-			if (StringUtils.equals(((String) data).trim(), ""))
+			if (!(data instanceof String))
 				return;
 			JSONObject jsonObject = JSONObject.parseObject((String) data);
 			JSONObject jsonObejctContent = jsonObject.getJSONObject("content");
@@ -36,13 +35,12 @@ public class WebSocketService {
 //			SocketData socketData = JSON.parseObject((String) data, SocketData.class);
 ////					JsonUtils.jsonToPojo((String) data, SocketData.class);
 //			abstracSocketContent.setUserId(userId);
-			abstracSocketContent.setUserId(userId);
-			abstracSocketContent.setSyncIdList(jsonObject.getJSONArray("syncId").toJavaList(String.class));
-			System.out.println("com.ignorant.chat.entity." + jsonObject.getString("type"));
+			content.setUserId(userId);
+			content.setSyncIdList(jsonObject.getJSONArray("syncId").toJavaList(String.class));
 			abstracSocketContent.start(content);
 		} catch (Exception e) {
 			// TODO: handle exception
-			System.out.println("格式化文件出错" + JsonUtils.objectToJson(data));
+			logger.error(String.format("格式化文件出错,源：%s，错误：%s", JsonUtils.objectToJson(data), e.getMessage()));
 			e.printStackTrace();
 		}
 	}

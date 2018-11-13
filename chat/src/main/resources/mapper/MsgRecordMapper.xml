@@ -16,7 +16,7 @@
     <result column="lastEditUser" property="lastEditUser" jdbcType="VARCHAR" />
   </resultMap>
   
-  <insert id="addMsg" useGeneratedKeys="true"  parameterType="com.ignorant.pojo.MsgRecord">
+  <insert id="addMsg" useGeneratedKeys="true"  parameterType="com.ignorant.pojo.MsgRecord" keyProperty="id">
 	INSERT
 		INTO
 			msg_record(
