@@ -6,8 +6,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.ignorant.chat.enums.UserStatus;
-import com.ignorant.pojo.User;
-import com.ignorant.utils.MyMapper;
+import com.ignorant.chat.pojo.User;
+import com.ignorant.chat.utils.MyMapper;
 
 public interface UserMapper extends MyMapper<User> {
 	public List<User> getFriendList(String userId);

@@ -1,4 +1,4 @@
-package com.ignorant.chat.websocket;
+package com.ignorant.chat.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONObject;
 import com.ignorant.chat.entity.AbstracScocketContent;
 import com.ignorant.chat.entity.SocketData;
-import com.ignorant.chat.utils.JsonUtils;
+import com.ignorant.chat.websocket.WebSocketManager;
 
 @Component
 public class WebSocketService {
@@ -21,8 +21,11 @@ public class WebSocketService {
 
 	public void operate(String userId, Object data) {
 		try {
-			if (!(data instanceof String))
+			if (!(data instanceof String)) {
+				logger.debug("ignore data from websocket {userId: {}, data: {}}", userId,
+						data);
 				return;
+			}
 			JSONObject jsonObject = JSONObject.parseObject((String) data);
 			JSONObject jsonObejctContent = jsonObject.getJSONObject("content");
 			String type = jsonObject.getString("type");
@@ -31,21 +34,18 @@ public class WebSocketService {
 							+ type.substring(1, type.length())));
 			AbstracScocketContent abstracSocketContent = (AbstracScocketContent) context
 					.getBean(jsonObject.getString("type"));
-
-//			SocketData socketData = JSON.parseObject((String) data, SocketData.class);
-////					JsonUtils.jsonToPojo((String) data, SocketData.class);
-//			abstracSocketContent.setUserId(userId);
 			content.setUserId(userId);
 			content.setSyncIdList(jsonObject.getJSONArray("syncId").toJavaList(String.class));
 			abstracSocketContent.start(content);
 		} catch (Exception e) {
-			// TODO: handle exception
-			logger.error(String.format("格式化文件出错,源：%s，错误：%s", JsonUtils.objectToJson(data), e.getMessage()));
+			logger.debug("format failed when receive data from websocket {userId: {}, data: {}, error: {}}", userId,
+					JSONObject.toJSONString(data), e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
 	public boolean send(String userId, SocketData socketData) {
+		logger.debug("send data to websocket {userID: {}, socketData: {}}", userId, JSONObject.toJSONString(socketData));
 		return WebSocketManager.send(userId, socketData);
 	}
 }

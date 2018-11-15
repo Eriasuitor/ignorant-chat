@@ -1,4 +1,4 @@
-package com.ignorant.chat.Service;
+package com.ignorant.chat.service;
 
 import java.awt.geom.NoninvertibleTransformException;
 import java.io.NotActiveException;
@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.apache.ibatis.javassist.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,18 +17,13 @@ import com.ignorant.chat.entity.Msg;
 import com.ignorant.chat.entity.SocketData;
 import com.ignorant.chat.entity.StatusChange;
 import com.ignorant.chat.enums.ContentType;
-import com.ignorant.chat.enums.MsgType;
-import com.ignorant.chat.mapper.AccountMapper;
 import com.ignorant.chat.mapper.MsgFlagMapper;
 import com.ignorant.chat.mapper.MsgRecordMapper;
 import com.ignorant.chat.mapper.UserFriendMapper;
 import com.ignorant.chat.mapper.UserMapper;
-import com.ignorant.chat.utils.JsonUtils;
-import com.ignorant.chat.wcs.WcsService;
+import com.ignorant.chat.pojo.MsgRecord;
+import com.ignorant.chat.pojo.User;
 import com.ignorant.chat.websocket.WebSocketManager;
-import com.ignorant.chat.websocket.WebSocketService;
-import com.ignorant.pojo.MsgRecord;
-import com.ignorant.pojo.User;
 
 @Component
 public class UserService {
@@ -45,13 +41,12 @@ public class UserService {
 	private MsgFlagMapper msgFlagMapper;
 
 	@Autowired
-	private AccountMapper accountMapper;
-
-	@Autowired
 	private WebSocketService webSocketService;
 
 	@Autowired
 	private WcsService wcsService;
+
+	Logger logger = LoggerFactory.getLogger(getClass());
 
 	public void changeAvatar(InfoChange infochange) {
 		userMapper.changeAvatar(infochange.getFrom(), infochange.getContent(), infochange.getDate());
@@ -67,14 +62,14 @@ public class UserService {
 
 	public void sendMsg(Msg msg) {
 		if (getUserInfo(msg.getTo()) == null) {
-			wcsService.sendMsg(msg);
+			wcsService.sendMsg(msg.getFrom(), msg.getTo(), msg.getContent(), msg.getSyncIdList());
 			return;
 		}
 		MsgRecord msgRecord = new MsgRecord(msg.getTo(), msg.getFrom(), msg.getType(), msg.getContent(), msg.getDate(),
 				msg.getDate(), msg.getFrom(), msg.getFrom());
 		msgRecordMapper.addMsg(msgRecord);
 		msg.setMsgId(msgRecord.getId());
-		System.out.println(msgRecord.getId());
+		msgRecordMapper.addMsg(msgRecord);
 		SocketData socketDate = new SocketData(ContentType.msg, msg);
 		if (msg.getFrom().equals(msg.getUserId()))
 			WebSocketManager.send(msg.getTo(), socketDate);
@@ -86,21 +81,20 @@ public class UserService {
 		this.sync(msg.getUserId(), msg.getSyncIdList());
 	}
 
-	public void sync(String userId, List<String> syncIdList) {
-		webSocketService.send(userId, new SocketData(ContentType.sync, null, syncIdList));
+	public void sync(String userId, List<String> syncList) {
+		webSocketService.send(userId, new SocketData(ContentType.sync, null, syncList));
 	}
 
 	public List<Msg> queryMsg(String userId, String friendId, Long anchor) {
 		if (anchor == null)
 			anchor = Long.MAX_VALUE;
-		List<MsgRecord> msgRecordList = msgRecordMapper.queryMsg(userId, friendId, anchor, 30);
+		List<MsgRecord> msgRecordList = msgRecordMapper.queryMsg(userId, friendId, anchor, 20);
 		List<Msg> result = new ArrayList<Msg>();
 		msgRecordList.forEach(item -> {
 			result.add(new Msg(item.getFrom(), item.getUserId(), item.getType(), item.getContent(), item.getId(),
 					item.getLastEditData()));
 		});
 		result.sort(new Comparator<Msg>() {
-
 			@Override
 			public int compare(Msg o1, Msg o2) {
 				// TODO Auto-generated method stub
@@ -110,6 +104,9 @@ public class UserService {
 		return result;
 	}
 
+	/**
+	 * Get ic friend list + wcs init contact list(not contact list)
+	 */
 	public List<User> getFriendList(String userId) {
 		List<User> wcInitFriendList = wcsService.getInitContact(userId);
 		for (int i = 0; i < wcInitFriendList.size(); i++) {
@@ -155,6 +152,7 @@ public class UserService {
 					String.format("user %S was friend of user %s yet", friendId, userId));
 		}
 		userFriendMapper.addFriend(userId, friendId);
+		logger.info("add friend success {userId: {}, friendId: {}}", userId, friendId);
 		return friend;
 	}
 
@@ -163,8 +161,19 @@ public class UserService {
 	}
 
 	public List<User> queryUserListByUserId(String userId, String userIdPrefix) {
+		char[] charArray = userIdPrefix.toCharArray();
+		boolean isValid = true;
+		for (int i = 0; i < charArray.length; i++) {
+			if (charArray[i] < ' ' || charArray[i] > '~') {
+				isValid = false;
+				break;
+			}
+		}
 		List<User> wcInitFriendList = wcsService.queryContact(userId, userIdPrefix);
+		if (!isValid)
+			return wcInitFriendList;
 		List<User> friendList = userMapper.queryUserListByUserId(userIdPrefix);
+		System.out.println(friendList.size());
 		List<User> result = new ArrayList<User>();
 		int i = Math.min(wcInitFriendList.size(), friendList.size()), j = -1;
 		while (++j < i) {
@@ -172,9 +181,9 @@ public class UserService {
 			result.add(friendList.get(j));
 		}
 		if (wcInitFriendList.size() > friendList.size()) {
-			result.addAll(wcInitFriendList.subList(i, wcInitFriendList.size() - 1));
+			result.addAll(wcInitFriendList.subList(i, wcInitFriendList.size()));
 		} else if (wcInitFriendList.size() < friendList.size()) {
-			result.addAll(friendList.subList(i, friendList.size() - 1));
+			result.addAll(friendList.subList(i, friendList.size()));
 		}
 		return result;
 	}
@@ -185,10 +194,6 @@ public class UserService {
 
 	public void updateCurrent(String userId, Long current) {
 		msgFlagMapper.updateCurrent(userId, current);
-	}
-
-	public void addUser() {
-
 	}
 
 	public void addFriend(String userId, List<String> friendIdList)
@@ -209,4 +214,5 @@ public class UserService {
 		}
 		userFriendMapper.addFriendByBunch(userId, friendIdList);
 	}
+
 }

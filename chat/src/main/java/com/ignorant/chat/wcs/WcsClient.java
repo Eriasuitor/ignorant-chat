@@ -31,19 +31,14 @@ public class WcsClient {
 			webSocketSession.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.debug("websocket session close before");
+			logger.debug("websocket session closed before");
 		}
-		System.out.println(111);
-		System.out.println(wcsHandler);
 		WebSocketClient client = new StandardWebSocketClient();
-		ListenableFuture<WebSocketSession> a = client.doHandshake(wcsHandler, "ws://localhost:8081");
+		ListenableFuture<WebSocketSession> a = client.doHandshake(wcsHandler, "ws://120.78.93.110:8081");
 		a.addCallback(new SuccessCallback<Object>() {
 			public void onSuccess(Object result) {
 				webSocketSession = (WebSocketSession) result;
-				System.out.println(0);
-				System.out.println(webSocketSession);
 				logger.info("connect to wcs success.");
-//				Thread.currentThread().suspend();
 			}
 
 		}, new FailureCallback() {

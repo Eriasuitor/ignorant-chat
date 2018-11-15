@@ -1,4 +1,4 @@
-package com.ignorant.chat.Service;
+package com.ignorant.chat.service;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

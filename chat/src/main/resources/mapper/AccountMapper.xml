@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.ignorant.chat.mapper.AccountMapper" >
-  <resultMap id="BaseResultMap" type="com.ignorant.pojo.Account" >
+  <resultMap id="BaseResultMap" type="com.ignorant.chat.pojo.Account" >
     <!--
       WARNING - @mbg.generated
     -->
@@ -12,4 +12,17 @@
     <result column="createUser" property="createUser" jdbcType="VARCHAR" />
     <result column="lastEditUser" property="lastEditUser" jdbcType="VARCHAR" />
   </resultMap>
+  
+  <select id="queryAccount" parameterType="String" resultMap="BaseResultMap">
+	SELECT
+		userId,
+		password,
+		createDate,
+		lastEditData,
+		lastEditUser
+	FROM
+		`account`
+	WHERE
+		userId = #{userId}
+  </select>
 </mapper>

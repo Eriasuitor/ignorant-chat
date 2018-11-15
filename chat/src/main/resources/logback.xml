@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="runtime"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>debug</level>
+		</filter>
+		<encoder>
+			<pattern>[%d] [%p] - %m %n</pattern>
+		</encoder>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">            <!--路径 -->
+			<fileNamePattern>logs/%d.log</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+	<logger name="com.ignorant.chat" level="debug">
+		<appender-ref ref="runtime" />
+	</logger>
+	<root name="com.ignorant.chat" level="error">
+		<appender-ref ref="runtime" />
+	</root>
+</configuration>

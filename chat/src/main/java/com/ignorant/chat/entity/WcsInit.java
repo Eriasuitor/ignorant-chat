@@ -1,7 +1,7 @@
 package com.ignorant.chat.entity;
 
 import com.ignorant.chat.enums.WcsMsgType;
-import com.ignorant.pojo.User;
+import com.ignorant.chat.pojo.User;
 
 public class WcsInit extends AbstracScocketContent {
 	private final WcsMsgType type = WcsMsgType.init;

@@ -8,6 +8,8 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.ignorant.chat.service.WebSocketService;
+
 public class MyHandler implements WebSocketHandler {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());

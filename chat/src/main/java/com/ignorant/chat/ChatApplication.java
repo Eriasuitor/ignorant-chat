@@ -12,6 +12,3 @@ public class ChatApplication {
 		SpringApplication.run(ChatApplication.class, args);
 	}
 }
-
-// to filehelper 不是· 开头
-// 前段发送只穿了to，type，content

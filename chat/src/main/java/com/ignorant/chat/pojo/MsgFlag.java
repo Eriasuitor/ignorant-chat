@@ -1,4 +1,4 @@
-package com.ignorant.pojo;
+package com.ignorant.chat.pojo;
 
 import java.util.Date;
 import javax.persistence.*;

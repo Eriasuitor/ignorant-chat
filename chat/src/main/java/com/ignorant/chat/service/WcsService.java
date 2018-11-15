@@ -1,4 +1,4 @@
-package com.ignorant.chat.wcs;
+package com.ignorant.chat.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,17 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.ignorant.chat.entity.Msg;
-import com.ignorant.chat.utils.JsonUtils;
-import com.ignorant.chat.wcs.entity.Contact;
+import com.ignorant.chat.pojo.User;
+import com.ignorant.chat.wcs.WcsClient;
 import com.ignorant.chat.wcs.entity.WcsSocketContent;
-import com.ignorant.chat.websocket.WebSocketService;
-import com.ignorant.pojo.User;
 
 @Component
 public class WcsService {
@@ -35,9 +32,6 @@ public class WcsService {
 
 	@Autowired
 	private WcsClient wsClient;
-
-	@Autowired
-	private WebSocketService webSocketService;
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -55,6 +49,11 @@ public class WcsService {
 
 	public void handleWcsData(Object data) {
 		try {
+			if (!(data instanceof String)) {
+				logger.debug("ignore data from wcs { data: {}}", data);
+				return;
+			}
+			logger.debug("receive data from wcs {data: {}}", JSONObject.toJSONString(data));
 			JSONObject jsonObject = JSONObject.parseObject((String) data);
 			JSONObject jsonObejctContent = jsonObject.getJSONObject("data");
 			String type = jsonObject.getString("type");
@@ -72,41 +71,31 @@ public class WcsService {
 			abstracSocketData.start(jsonObject.getString("userId"), content);
 		} catch (Exception e) {
 			// TODO: handle exception
-			System.out.println("格式化文件出错" + JsonUtils.objectToJson(data));
-			e.printStackTrace();
+			logger.debug("format failed when receive data from wcs {data: {}, error: {}}",
+					JSONObject.toJSONString(data), e.getMessage());
 		}
-
-//		WebSocketManager.send(wcsData.getUserId(), new SocketData(ContentType.wcsMsg, JsonUtils.objectToJson(wcsData)));
 	}
 
-	public boolean sendMsg(Msg msg) {
-		return wsClient.sendMsg(msg.getUserId(), msg.getTo(), msg.getContent(),
-				msg.getSyncIdList().get(msg.getSyncIdList().size() - 1));
-	}
-
-	public static void main(String[] args) {
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<Contact[]> responseEntity = restTemplate
-				.getForEntity("http://localhost:8082/contact/init?userId=Lory.Y.Jiang", Contact[].class);
-		System.out.println(responseEntity.getBody()[0].getHeadImgUrl());
-		int i = 0;
-		System.out.println(new Integer(i).toString());
+	public boolean sendMsg(String userId, String to, String content, List<String> syncList) {
+		logger.debug("prepare to send msg to wcs {userId: {}, to: {}, content: {}, syncList: {}}", userId, to, content,
+				JSONArray.toJSONString(syncList));
+		return wsClient.sendMsg(userId, to, content, syncList.get(syncList.size() - 1));
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<User> queryContact(String userId, String q) {
 		try {
 			RestTemplate restTemplate = new RestTemplate();
-			List<Map<String, Object>> response = restTemplate
-					.getForObject(String.format("http://localhost:8082/contact?userId=%s?q=%s", userId, q), List.class);
+			List<Map<String, Object>> response = restTemplate.getForObject(
+					String.format("http://120.78.93.110:8082/contact?userId=%s&q=%s", userId, q), List.class);
 			List<User> result = new ArrayList<>();
 			response = response.subList(0, Math.min(3000, response.size()));
 			for (Map<String, Object> m : response) {
 				User user = new User();
 				user.setUserId(m.get("UserName").toString());
 				user.setNickName(m.get("NickName").toString());
-				user.setAvatar("https://wx2.qq.com" + m.get("HeadImgUrl").toString());
-				user.setAvatar_small("https://wx2.qq.com" + m.get("HeadImgUrl").toString());
+				user.setAvatar(m.get("HeadImgUrl").toString());
+				user.setAvatar_small(m.get("HeadImgUrl").toString());
 				user.setGender(m.get("Sex").toString());
 				user.setSignature(m.get("Signature").toString());
 				user.setType("wc");
@@ -114,7 +103,7 @@ public class WcsService {
 			}
 			return result;
 		} catch (Exception e) {
-			logger.error(String.format("query contact failed: %s", e.getMessage()));
+			logger.error("query contact failed {error: {}}", e.getMessage());
 			return new ArrayList<>();
 		}
 	}
@@ -124,7 +113,7 @@ public class WcsService {
 		try {
 			RestTemplate restTemplate = new RestTemplate();
 			List<Map<String, Object>> response = restTemplate
-					.getForObject("http://localhost:8082/contact/init?userId=" + userId, List.class);
+					.getForObject("http://120.78.93.110:8082/contact/init?userId=" + userId, List.class);
 			List<User> result = new ArrayList<>();
 			System.out.println(response.size());
 			response = response.subList(0, Math.min(30, response.size()));
@@ -132,8 +121,8 @@ public class WcsService {
 				User user = new User();
 				user.setUserId(m.get("UserName").toString());
 				user.setNickName(m.get("NickName").toString());
-				user.setAvatar("https://wx2.qq.com" + m.get("HeadImgUrl").toString());
-				user.setAvatar_small("https://wx2.qq.com" + m.get("HeadImgUrl").toString());
+				user.setAvatar(m.get("HeadImgUrl").toString());
+				user.setAvatar_small(m.get("HeadImgUrl").toString());
 				user.setGender(m.get("Sex").toString());
 				user.setSignature(m.get("Signature").toString());
 				user.setType("wc");
@@ -142,9 +131,8 @@ public class WcsService {
 			System.out.println(result.size());
 			return result;
 		} catch (Exception e) {
-			logger.error(String.format("get init contact failed: %s", e.getMessage()));
+			logger.error("get init contact failed {error: {}}", e.getMessage());
 			return new ArrayList<>();
 		}
-
 	}
 }

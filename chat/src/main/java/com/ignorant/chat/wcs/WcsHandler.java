@@ -9,6 +9,8 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.ignorant.chat.service.WcsService;
+
 @Component
 public class WcsHandler implements WebSocketHandler {
 

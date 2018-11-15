@@ -5,8 +5,8 @@ import java.util.Date;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.ignorant.chat.Service.UserService;
 import com.ignorant.chat.enums.UserInfoChangeType;
+import com.ignorant.chat.service.UserService;
 
 @Component
 @Scope("prototype")

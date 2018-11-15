@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.ignorant.chat.Service.UserService;
+import com.ignorant.chat.service.UserService;
 
 @Component
 @Scope("prototype")

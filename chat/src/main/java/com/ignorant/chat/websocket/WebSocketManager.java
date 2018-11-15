@@ -13,7 +13,6 @@ import org.springframework.web.socket.WebSocketSession;
 import com.alibaba.fastjson.JSONObject;
 import com.github.jknack.handlebars.Handlebars.SafeString;
 import com.ignorant.chat.entity.SocketData;
-import com.ignorant.chat.utils.JsonUtils;
 
 public class WebSocketManager {
 	public static Logger logger = LoggerFactory.getLogger(WebSocketManager.class);

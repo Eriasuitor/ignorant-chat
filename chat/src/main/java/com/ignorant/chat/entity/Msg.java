@@ -6,9 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.ignorant.chat.Service.UserService;
 import com.ignorant.chat.enums.MsgType;
-import com.ignorant.chat.utils.JsonUtils;
+import com.ignorant.chat.service.UserService;
 
 @Component
 @Scope("prototype")
@@ -97,5 +96,4 @@ public class Msg extends AbstracScocketContent {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
 }

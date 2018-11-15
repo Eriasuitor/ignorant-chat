@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package com.ignorant.utils;
+package com.ignorant.chat.utils;
 
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.common.MySqlMapper;

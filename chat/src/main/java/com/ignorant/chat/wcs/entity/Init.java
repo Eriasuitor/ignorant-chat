@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import com.ignorant.chat.entity.SocketData;
 import com.ignorant.chat.entity.WcsInit;
 import com.ignorant.chat.enums.ContentType;
-import com.ignorant.chat.wcs.WcsService;
-import com.ignorant.chat.websocket.WebSocketService;
-import com.ignorant.pojo.User;
+import com.ignorant.chat.pojo.User;
+import com.ignorant.chat.service.WcsService;
+import com.ignorant.chat.service.WebSocketService;
 
 @Component
 @Scope("prototype")

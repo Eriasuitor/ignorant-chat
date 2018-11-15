@@ -8,7 +8,7 @@ import com.ignorant.chat.entity.SocketData;
 import com.ignorant.chat.entity.WcsNotification;
 import com.ignorant.chat.enums.ContentType;
 import com.ignorant.chat.enums.WcsMsgType;
-import com.ignorant.chat.websocket.WebSocketService;
+import com.ignorant.chat.service.WebSocketService;
 
 @Component
 @Scope("prototype")

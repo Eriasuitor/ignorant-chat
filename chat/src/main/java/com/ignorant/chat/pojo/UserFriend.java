@@ -1,13 +1,14 @@
-package com.ignorant.pojo;
+package com.ignorant.chat.pojo;
 
 import java.util.Date;
 import javax.persistence.*;
 
-public class Account {
+@Table(name = "user_friend")
+public class UserFriend {
     @Id
     private String userId;
 
-    private String password;
+    private String friendId;
 
     private Date createDate;
 
@@ -32,17 +33,17 @@ public class Account {
     }
 
     /**
-     * @return password
+     * @return friendId
      */
-    public String getPassword() {
-        return password;
+    public String getFriendId() {
+        return friendId;
     }
 
     /**
-     * @param password
+     * @param friendId
      */
-    public void setPassword(String password) {
-        this.password = password;
+    public void setFriendId(String friendId) {
+        this.friendId = friendId;
     }
 
     /**

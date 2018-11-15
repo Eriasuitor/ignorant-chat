@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.ignorant.pojo.MsgRecord;
-import com.ignorant.utils.MyMapper;
+import com.ignorant.chat.pojo.MsgRecord;
+import com.ignorant.chat.utils.MyMapper;
 
 public interface MsgRecordMapper extends MyMapper<MsgRecord> {
 	public Long addMsg(MsgRecord msgRecord);
