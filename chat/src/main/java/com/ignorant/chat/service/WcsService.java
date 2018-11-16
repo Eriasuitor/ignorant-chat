@@ -59,9 +59,6 @@ public class WcsService {
 			String type = jsonObject.getString("type");
 			if (StringUtils.equals(type, "msg"))
 				type = "wcsMsg";
-			System.out.println("com.ignorant.chat.wcs.entity." + type.substring(0, 1).toUpperCase()
-					+ type.substring(1, type.length()));
-			System.out.println(jsonObejctContent);
 			WcsSocketContent content = null;
 			if (jsonObejctContent != null)
 				content = (WcsSocketContent) jsonObejctContent
@@ -115,7 +112,6 @@ public class WcsService {
 			List<Map<String, Object>> response = restTemplate
 					.getForObject("http://120.78.93.110:8082/contact/init?userId=" + userId, List.class);
 			List<User> result = new ArrayList<>();
-			System.out.println(response.size());
 			response = response.subList(0, Math.min(30, response.size()));
 			for (Map<String, Object> m : response) {
 				User user = new User();
@@ -128,7 +124,6 @@ public class WcsService {
 				user.setType("wc");
 				result.add(user);
 			}
-			System.out.println(result.size());
 			return result;
 		} catch (Exception e) {
 			logger.error("get init contact failed {error: {}}", e.getMessage());

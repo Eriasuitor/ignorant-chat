@@ -29,9 +29,6 @@ public class Init extends Contact implements WcsSocketContent {
 		user.setAvatar_small(contact.getHeadImgUrl());
 		user.setGender(contact.getSex());
 		user.setSignature(contact.getSignature());
-		System.out.println("add");
-		System.out.println(userId);
-		System.out.println(user);
 		WcsService.user2WcInfo.put(userId, user);
 		websocketService.send(userId, new SocketData(ContentType.wcsNotification, new WcsInit(user)));
 	}

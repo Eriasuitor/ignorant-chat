@@ -173,7 +173,6 @@ public class UserService {
 		if (!isValid)
 			return wcInitFriendList;
 		List<User> friendList = userMapper.queryUserListByUserId(userIdPrefix);
-		System.out.println(friendList.size());
 		List<User> result = new ArrayList<User>();
 		int i = Math.min(wcInitFriendList.size(), friendList.size()), j = -1;
 		while (++j < i) {

@@ -36,8 +36,6 @@ public class WcsMsg implements WcsSocketContent {
 		// TODO Auto-generated method stub
 		WcsMsg wcsMsg = (WcsMsg) data;
 		User user = WcsService.user2WcInfo.get(userId);
-		System.out.println(userId);
-		System.out.println(user);
 		if (user == null)
 			return;
 		for (WcsMsgContent wmc : wcsMsg.getMsgList()) {

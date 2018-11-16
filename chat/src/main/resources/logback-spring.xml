@@ -9,14 +9,17 @@
 			<pattern>[%d] [%p] - %m %n</pattern>
 		</encoder>
 		<rollingPolicy
-			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">            <!--路径 -->
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>logs/%d.log</fileNamePattern>
 		</rollingPolicy>
 	</appender>
-	<logger name="com.ignorant.chat" level="debug">
+	<logger name="com.ignorant.chat.mapper" level="error" additivity="false">
 		<appender-ref ref="runtime" />
 	</logger>
-	<root name="com.ignorant.chat" level="error">
+	<logger name="com.ignorant.chat" level="debug" additivity="false">
+		<appender-ref ref="runtime" />
+	</logger>
+	<root level="error" additivity="false">
 		<appender-ref ref="runtime" />
 	</root>
 </configuration>
