@@ -17,8 +17,8 @@ mapper:
 spring:
    datasource:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://120.78.93.110:3306/ic?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
+      url: jdbc:mysql://xxx.xxx.xxx.xxx:3306/ic?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true
       username: root
-      password: 0nlyLory
+      password: xxxxxx
 server:
    port: 8090
